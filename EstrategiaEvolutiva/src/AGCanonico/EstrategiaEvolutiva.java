@@ -14,21 +14,22 @@ public class EstrategiaEvolutiva {
 
 	ArrayList<Individuo> populacao;
 	private Random random;
-	int precisao, numeroIteracoes, tamanhoPopulacao;
+	int precisao, numeroIteracoes, tamanhoPopulacao, numeroVariaveis;
 	private double probCruz;
 
-	public EstrategiaEvolutiva(int tamanhoPopulacao, int precisao, int numeroIteracores, double probCruz) {
+	public EstrategiaEvolutiva(int tamanhoPopulacao, int numeroVariaveis, int precisao, int numeroIteracores, double probCruz) {
 		super();
 		this.precisao = precisao;
 		this.numeroIteracoes = numeroIteracores;
 		this.probCruz = probCruz;
 		this.tamanhoPopulacao = tamanhoPopulacao;
+		this.numeroVariaveis = numeroVariaveis;
 		random = new Random(123456);
 		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) {
-		EstrategiaEvolutiva EE = new EstrategiaEvolutiva(100, 6, 2000, 1);
+		EstrategiaEvolutiva EE = new EstrategiaEvolutiva(1000, 10, 6, 2000, 1);
 		EE.run();
 	}
 
@@ -45,7 +46,7 @@ public class EstrategiaEvolutiva {
 
 		while (this.numeroIteracoes + 1 > iteracao) {
 
-			// Ranqueia populaÃ§Ã£o
+			// Ranqueia populaÃƒÂ§ÃƒÂ£o
 			this.rank(this.populacao);
 			
 			System.out.println(this.populacao.get(0).getFitness());
@@ -121,7 +122,7 @@ public class EstrategiaEvolutiva {
 			//aplicar regra diminuir
 			regra1_5_diminui(novaPopulacao);
 			System.out.println("diminui");
-		} //else n�o fazer nada
+		} //else não fazer nada
 		
 	}
 	
@@ -174,20 +175,27 @@ public class EstrategiaEvolutiva {
 		Collections.sort(populacao);
 	}
 
-	// Gerar populaÃ§Ã£o inicial de numeros reais
+	// Gerar populaÃƒÂ§ÃƒÂ£o inicial de numeros reais
 	private ArrayList<Individuo> populacaoInicialReais(int tamanhoPopulacao) {
 
 		ArrayList<Individuo> populacaoInicial = new ArrayList<Individuo>();
 
-		DoubleStream dsX = random.doubles(-100, 100);
-		double[] numerosX = dsX.limit(tamanhoPopulacao).toArray();
+		ArrayList<double[]> variaveis = new ArrayList<double[]>();
 
-		DoubleStream dsY = random.doubles(-100, 100);
-		double[] numerosY = dsY.limit(tamanhoPopulacao).toArray();
+		for (int i = 0; i < this.numeroVariaveis; i++) {
+			DoubleStream dsX = random.doubles(-100, 100);
+			double[] numerosX = dsX.limit(tamanhoPopulacao).toArray();
+			variaveis.add(numerosX);
+		}
+		
 
 		for (int i = 0; i < tamanhoPopulacao; i++) {
-			double[] cromossomo = { numerosX[i], numerosY[i], 1};
-
+			double[] cromossomo = new double[this.numeroVariaveis+1];
+			for (int j = 0; j < cromossomo.length-1; j++) {
+				cromossomo[j] = variaveis.get(j)[i];
+			}
+			cromossomo[cromossomo.length-1] = 1;
+			
 			Individuo individuo = new Individuo(cromossomo);
 
 			new AvaliacaoF6(precisao).avaliar(individuo);
