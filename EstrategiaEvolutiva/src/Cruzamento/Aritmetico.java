@@ -28,10 +28,19 @@ public class Aritmetico implements ICruzamento {
 		}
 		
 		//F1 = [a x P1] + [(1-a) x P2]
-		double[] crom1 = { (a*pai1.getCromossomo()[0])+((1-a)*pai2.getCromossomo()[0]),  (a*pai1.getCromossomo()[1])+((1-a)*pai2.getCromossomo()[1]), pai1.getCromossomo()[2]};
+		double[] crom1 = new double[pai1.getCromossomo().length];
+		for (int i = 0; i < crom1.length-1; i++) {
+			crom1[i]= (a*pai1.getCromossomo()[i])+((1-a)*pai2.getCromossomo()[i]);
+		}		
+		crom1[crom1.length-1] = pai1.getCromossomo()[crom1.length-1];
 		
 		//F2 = [a x P2] + [(1-a) x P1]
-		double[] crom2 = { (a*pai2.getCromossomo()[0])+((1-a)*pai1.getCromossomo()[0]),  (a*pai2.getCromossomo()[1])+((1-a)*pai1.getCromossomo()[1]),pai2.getCromossomo()[2]};
+		double[] crom2 = new double[pai2.getCromossomo().length];
+		for (int i = 0; i < crom2.length-1; i++) {
+			crom2[i]=  (a*pai2.getCromossomo()[i])+((1-a)*pai1.getCromossomo()[i]);
+		}
+		
+		crom2[crom2.length-1] = pai2.getCromossomo()[crom2.length-1];
 
 		filho1.setCromossomo(crom1);
 		filho2.setCromossomo(crom2);
